@@ -1,28 +1,30 @@
-require("dotenv").config();
-const express = require("express");
-const path = require("path");
-const logger = require("./middleware/logger");
-const commentsRouter = require("./routes/comments");
-const shortid = require("shortid");
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const shortid = require('shortid');
+const cors = require('cors');
+const logger = require('./middleware/logger');
+const commentsRouter = require('./routes/comments');
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-/*set up middleware */
-//body parser middleware
+/* set up middleware */
+// body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//logger middleware
-//app.use(logger)
 
-//static middleware
-app.use(express.static(path.join(__dirname, "public")));
+// cors middleware
+app.use(cors());
+
+// static middleware
+app.use(express.static(path.join(__dirname, 'public')));
 
 // routing
-app.use("/api/comments", commentsRouter);
+app.use('/api/comments', commentsRouter);
 
 const PORT = process.env.PORT || 5000;
 
