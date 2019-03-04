@@ -8,7 +8,7 @@ const commentData = require('../data');
 // create the db file if it doesn't exist
 // and seed it with data
 const adapter = new FileSync('db.json', {
-  defaultValue: { comments: commentData },
+  defaultValue: { comments: commentData }
 });
 
 const db = lowdb(adapter);
@@ -16,7 +16,8 @@ const db = lowdb(adapter);
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.json(commentData);
+  const comments = db.get('comments').value();
+  res.json(comments);
 });
 
 router.get('/:id', (req, res) => {
@@ -40,14 +41,14 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   if (!req.body.text) {
     res.status(400).json({
-      msg: 'Invalid ID',
+      msg: 'Invalid ID'
     });
   }
   // create a new comment with the text
   const newComment = {
     text: req.body.text,
     id: shortid.generate(),
-    timestamp: moment().format(),
+    timestamp: moment().format()
   };
 
   // timestamp: moment()
@@ -62,7 +63,7 @@ router.post('/', (req, res) => {
   // return all the comments, make sure new comment is included
   res.status(201).json({
     msg: 'Comment successfully added',
-    comments: db.get('comments').value(),
+    comments: db.get('comments').value()
   });
 
   // BONUS: if request has no body text (or text is empty) send proper error code
@@ -117,6 +118,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
+  console.log(req.params.id);
   if (
     !db
       .get('comments')
@@ -131,7 +133,7 @@ router.delete('/:id', (req, res) => {
 
   res.status(200).json({
     msg: 'Comment Successfully Deleted',
-    comments: db.get('comments').value(),
+    comments: db.get('comments').value()
   });
 
   // const myComment = commentData.find(
