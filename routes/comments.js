@@ -16,7 +16,11 @@ const db = lowdb(adapter);
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  const comments = db.get('comments').value();
+  let comments = db.get('comments').value();
+  if (req.query.filter) {
+    const filterText = req.query.filter;
+    comments = comments.filter(comment => comment.text.toLowerCase().includes(filterText.toLowerCase()));
+  }
   res.json(comments);
 });
 

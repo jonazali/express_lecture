@@ -1,6 +1,11 @@
 {
   "comments": [
     {
+      "text": "Love this!",
+      "id": "1",
+      "timestamp": "2019-02-22T08:45:37-08:00"
+    },
+    {
       "text": "Super Good",
       "id": "2",
       "timestamp": "2019-03-01T14:15:34-08:00"
@@ -14,6 +19,11 @@
       "text": "Ramen is my fav food ever",
       "id": "4",
       "timestamp": "2019-03-01T14:18:02-08:00"
+    },
+    {
+      "text": "Nice Nice Nice!",
+      "id": "5",
+      "timestamp": "2019-02-26T08:45:37-08:00"
     }
   ]
 }
