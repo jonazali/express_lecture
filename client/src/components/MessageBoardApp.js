@@ -1,49 +1,80 @@
 import React from "react";
 import "../css/MessageBoardApp.css";
+import axios from "axios";
 import CommentList from "./CommentList";
-import CommentItem from "./CommentItem";
-import commentData from "../data";
+import SearchCommentList from "./SearchCommentList";
+import AddCommentForm from "./AddCommentForm";
 
 class MessageBoardApp extends React.Component {
   constructor(props) {
     super(props);
 
+    // set initial state
     this.state = {
-      comments: commentData
+      comments: []
     };
   }
 
+  // lifecycle hook ran after component is loaded into DOM
+  componentDidMount() {
+    axios
+      .get("https://express-train.herokuapp.com/api/comments")
+      .then(response => this.setState({ comments: response.data }));
+  }
+
   handleDelete = (id) => {
-    // filter out the comments
-    const updatedComments = this.state.comments.filter(
-      comment => comment.id !== id
-    );
-    // set state
-    this.setState({ comments: updatedComments });
+    axios
+      .delete(`https://express-train.herokuapp.com/api/comments/${id}`)
+      .then(response => this.setState({ comments: response.data.comments }))
+      .catch(error => console.error(error));
+    // // filter out the comments
+    // const updatedComments = this.state.comments.filter(
+    //   comment => comment.id !== id
+    // );
+    // // set state
+    // this.setState({ comments: updatedComments });
+  };
+
+  handleAddComment = (commentText) => {
+    console.log(`commenting ${commentText}`);
+    axios
+      .post(`https://express-train.herokuapp.com/api/comments/`, {
+        text: commentText
+      })
+      .then(response => this.setState({ comments: response.data.comments }))
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          alert("Please enter comment text");
+        }
+      });
+  };
+
+  handleSearchCommentList = (searchText) => {
+    console.log("Searching...");
+    console.log(searchText);
+    axios
+      .get(
+        `https://express-train.herokuapp.com/api/comments/?filter=${searchText}`
+      )
+      .then(response => this.setState({ comments: response.data }));
   };
 
   render() {
     return (
       <div className="message-board-app">
         <nav>
-          <form>
-            <input type="text" name="search" placeholder="Search" />
-            <button type="submit">Search</button>
-          </form>
+          <SearchCommentList
+            onSearchCommentList={this.handleSearchCommentList}
+          />
           <button type="button" id="nukeButton">
             Nuke all Comments
           </button>
         </nav>
         <CommentList
           comments={this.state.comments}
-          onDelete={id => this.handleDelete(id)}
+          onDelete={this.handleDelete}
         />
-        <div className="add-comment">
-          <form>
-            <input type="text" name="comment" placeholder="Your opinion here" />
-            <button type="submit">Comment</button>
-          </form>
-        </div>
+        <AddCommentForm onAddComment={this.handleAddComment} />
       </div>
     );
   }
