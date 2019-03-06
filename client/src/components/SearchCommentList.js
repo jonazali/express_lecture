@@ -22,8 +22,8 @@ class SearchCommentList extends React.Component {
         <input
           type="text"
           name="comment"
-          placeholder="Your opinion here"
-          value={this.state.commentTextValue}
+          placeholder="Type something!"
+          value={this.state.searchTextValue}
           onChange={this.handleChange}
         />
         <button type="submit">Search</button>
